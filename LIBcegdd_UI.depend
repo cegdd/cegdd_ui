@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1585891009 source:/home/cegdd/projets/LIBcegdd_UI/main.c
+
+1585892329 source:/home/cegdd/projets/LIBcegdd_UI/LIBcegdd_ui.c
+	"LIBcegdd_ui.h"
+
+1585891262 /home/cegdd/projets/LIBcegdd_UI/LIBcegdd_ui.h
+

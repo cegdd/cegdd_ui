@@ -466,3 +466,92 @@ void CEGDD_UI_setboutonnombre(int nombre, int index, struct BOUTON *liste_bouton
     liste_bouton[index].texture = CEGDD_UI_imprime(buffer, 9999, couleur, police, &liste_bouton[index].pos.w, &liste_bouton[index].pos.h);
 
 }
+
+bool CEGDD_UI_colisionbox(SDL_Rect *A, SDL_Rect *B, bool pointeur)
+{
+	/*if cursor of the mouse(A) is inside zone B
+	test on the upleft of zone A*/
+	if (pointeur == true &&
+    A->x >= B->x && A->x <= B->x+B->w && A->y+A->h >= B->y && A->y+A->h <= B->y+B->h)
+	{
+		return true;
+	}
+	/*else if zone A is inside B*/
+	else if (pointeur == false &&
+		A->x+A->w >= B->x && A->x <= B->x+B->w && A->y+A->h >= B->y && A->y <= B->y+B->h)
+	{
+		return true;
+	}
+	return false;
+}
+
+
+
+bool CEGDD_UI_isInTheGoodPanel(struct BOUTON *liste_bouton, int slidestate, int index)
+{
+    if (liste_bouton[index].flag == B_detail && slidestate == SLIDE_DETAIL)
+    {
+        return true;
+    }
+    else if (liste_bouton[index].flag == B_liste &&slidestate == SLIDE_ESPECE)
+    {
+        return true;
+    }
+    else if (liste_bouton[index].flag == B_none)
+    {
+        return true;
+    }
+    return false;
+}
+
+void CEGDD_UI_BT_pointeur(struct SDL_Rect pointeur, struct BOUTON *liste_bouton, int *Qtt_bouton, int slidestate)
+{
+    int i;
+    for (i = 0 ; i <= *Qtt_bouton ; i++)
+    {
+        if ( CEGDD_UI_colisionbox(&pointeur, &liste_bouton[i].pos, true) == true &&
+            liste_bouton[i].etat != B_CLIQUER &&
+            liste_bouton[i].etat != B_IMPOSSIBLE &&
+            CEGDD_UI_isInTheGoodPanel(liste_bouton, slidestate, i) == true)
+            {
+                liste_bouton[i].etat = B_SURVOLER;
+            }
+        else if ( liste_bouton[i].etat != B_CLIQUER &&
+                  liste_bouton[i].etat != B_IMPOSSIBLE )
+        {
+            liste_bouton[i].etat = B_NORMAL;
+        }
+    }
+}
+int CEGDD_UI_BT_up(struct SDL_Rect pointeur, struct BOUTON *liste_bouton, int *Qtt_bouton, bool *asked)
+{
+    int i;
+    for (i = 0 ; i <= *Qtt_bouton ; i++)
+    {
+        if ( CEGDD_UI_colisionbox(&pointeur, &liste_bouton[i].pos, true) == true &&
+             liste_bouton[i].etat == B_CLIQUER)
+        {
+            liste_bouton[i].etat = B_NORMAL;
+            *asked = true;
+            return i;
+        }
+        else if( liste_bouton[i].etat == B_CLIQUER )
+        {
+            liste_bouton[i].etat = B_NORMAL;
+        }
+    }
+    return i;
+}
+
+void CEGDD_UI_BT_down(struct BOUTON *liste_bouton, int *Qtt_bouton)
+{
+    int i;
+
+    for (i = 0 ; i <= *Qtt_bouton ; i++)
+    {
+        if (liste_bouton[i].etat == B_SURVOLER)
+        {
+            liste_bouton[i].etat = B_CLIQUER;
+        }
+    }
+}

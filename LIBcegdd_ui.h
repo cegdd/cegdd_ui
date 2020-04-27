@@ -1,6 +1,8 @@
 #ifndef CEGDD_UI
 #define CEGDD_UI
 
+#include <stdbool.h>
+
 #include <GL/gl.h>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
@@ -54,8 +56,15 @@ struct BOUTON_TEXTE
 	struct BOUTON bouton;
 };
 
-enum{B_NORMAL, B_SURVOLER, B_CLIQUER, B_IMPOSSIBLE, B_INUSE};/*bouton*/
 
+enum{B_NORMAL, B_SURVOLER, B_CLIQUER, B_IMPOSSIBLE, B_INUSE};/*bouton*/
+enum{B_detail, B_liste, B_none};//a suppr
+enum{SLIDE_CLOSE, SLIDE_ESPECE, SLIDE_DETAIL};//a suppr
+
+bool CEGDD_UI_colisionbox(SDL_Rect *A, SDL_Rect *B, bool pointeur);
+bool CEGDD_UI_isInTheGoodPanel(struct BOUTON *liste_bouton, int slidestate, int index);
+
+int CEGDD_UI_BT_up(struct SDL_Rect pointeur, struct BOUTON *liste_bouton, int *Qtt_bouton, bool *asked);
 
 void CEGDD_UI_setPos4(SDL_Rect *pos, int x, int y, int w, int h);
 void CEGDD_UI_setPos2(SDL_Point *point, int x, int y);
@@ -75,6 +84,8 @@ void CEGDD_UI_creerboutontexte(char *path, int x, int y, int state, int flag, st
 void CEGDD_UI_creertexte(char *path, int x, int y, struct TEXTE *liste_texte, int *Qtt_texte, SDL_Color *couleur, TTF_Font *police);
 void CEGDD_UI_setboutontexte(char *path, int index, struct BOUTON *liste_bouton, SDL_Color *couleur, TTF_Font *police);
 void CEGDD_UI_setboutonnombre(int nombre, int index, struct BOUTON *liste_bouton, SDL_Color *couleur, TTF_Font *police);
+void CEGDD_UI_BT_pointeur(struct SDL_Rect pointeur, struct BOUTON *liste_bouton, int *Qtt_bouton, int slidestate);
+void CEGDD_UI_BT_down(struct BOUTON *liste_bouton, int *Qtt_bouton);
 
 Uint8 CEGDD_UI_obtenirPixel(SDL_Surface *surface, SDL_Point *pix);
 Uint8 CEGDD_UI_obtenirPixel_hook(SDL_Surface *surface, SDL_Point *pix);
